@@ -1,7 +1,7 @@
 resources:
   jobs:
-    nadja_test_job:
-      name: nadja_test_job
+    nadja_test_job_2:
+      name: nadja_test_job_2
       email_notifications:
         on_failure:
           - nadja.pedersen@mscience.com
@@ -32,6 +32,36 @@ resources:
               - metric: RUN_DURATION_SECONDS
                 op: GREATER_THAN
                 value: 3600
+        - task_key: testJob2
+          depends_on:
+            - task_key: testJob
+          notebook_task:
+            notebook_path: /Workspace/Users/nadja.pedersen@mscience.com/MyRepository/src/testjob.ipynb
+            source: WORKSPACE
+          job_cluster_key: nile_tagging_cluster
+        - task_key: condition_task
+          depends_on:
+            - task_key: testJob2
+          condition_task:
+            op: EQUAL_TO
+            left: "{{job.parameters.flag}}"
+            right: "true"
+        - task_key: task_3
+          depends_on:
+            - task_key: condition_task
+              outcome: "true"
+          notebook_task:
+            notebook_path: /Workspace/Users/nadja.pedersen@mscience.com/MyRepository/src/task_3
+            source: WORKSPACE
+          job_cluster_key: nile_tagging_cluster
+        - task_key: task_4
+          depends_on:
+            - task_key: condition_task
+              outcome: "false"
+          notebook_task:
+            notebook_path: /Workspace/Users/nadja.pedersen@mscience.com/MyRepository/src/task_4
+            source: WORKSPACE
+          job_cluster_key: nile_tagging_cluster
       job_clusters:
         - job_cluster_key: nile_tagging_cluster
           new_cluster:
@@ -59,3 +89,8 @@ resources:
             data_security_mode: LEGACY_SINGLE_USER_STANDARD
             runtime_engine: STANDARD
             num_workers: 10
+      queue:
+        enabled: true
+      parameters:
+        - name: flag
+          default: "true"
