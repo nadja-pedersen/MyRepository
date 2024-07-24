@@ -49,6 +49,12 @@ jobs:
       # Download the Databricks CLI.
       # See https://github.com/databricks/setup-cli
       - uses: databricks/setup-cli@main
+      # in the bundle's settings file.
+      - run: databricks bundle validate
+        working-directory: .
+        env:
+          DATABRICKS_TOKEN: ${{ secrets.NADJA_PAT_TOKEN }}
+          DATABRICKS_BUNDLE_ENV: development
 
       # Deploy the bundle to the "qa" target as defined
       # in the bundle's settings file.
