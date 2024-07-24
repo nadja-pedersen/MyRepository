@@ -1,7 +1,7 @@
 resources:
   jobs:
-    nadja_consumer_cluster:
-      name: nadja_consumer_cluster
+    nadja_test_job:
+      name: nadja_test_job
       email_notifications:
         on_failure:
           - nadja.pedersen@mscience.com
