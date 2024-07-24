@@ -1,0 +1,61 @@
+resources:
+  jobs:
+    nadja_consumer_cluster:
+      name: nadja_consumer_cluster
+      email_notifications:
+        on_failure:
+          - nadja.pedersen@mscience.com
+        on_duration_warning_threshold_exceeded:
+          - nadja.pedersen@mscience.com
+        no_alert_for_skipped_runs: true
+      notification_settings:
+        no_alert_for_skipped_runs: true
+      timeout_seconds: 14400
+      health:
+        rules:
+          - metric: RUN_DURATION_SECONDS
+            op: GREATER_THAN
+            value: 10800
+      schedule:
+        quartz_cron_expression: 55 58 15 * * ?
+        timezone_id: America/Denver
+        pause_status: PAUSED
+      tasks:
+        - task_key: PB_KT
+          notebook_task:
+            notebook_path: ../src/testjob.py
+            source: WORKSPACE
+          job_cluster_key: nile_tagging_cluster
+          timeout_seconds: 7200
+          health:
+            rules:
+              - metric: RUN_DURATION_SECONDS
+                op: GREATER_THAN
+                value: 3600
+      job_clusters:
+        - job_cluster_key: nile_tagging_cluster
+          new_cluster:
+            cluster_name: ""
+            spark_version: 13.3.x-scala2.12
+            aws_attributes:
+              first_on_demand: 1
+              availability: SPOT_WITH_FALLBACK
+              zone_id: auto
+              instance_profile_arn: arn:aws:iam::213585113823:instance-profile/DS_Cluster_Role
+              spot_bid_price_percent: 100
+            node_type_id: r6gd.8xlarge
+            driver_node_type_id: r6gd.4xlarge
+            custom_tags:
+              Vertical: TMT
+              Department: DSE
+              Sector: Software
+              Dataset: NileV7
+              PipelineType: Non-Cookbook
+              CostCenter: Tagging QA
+              Process: Dev
+              SubSector: Consumer Electronics
+            enable_elastic_disk: true
+            policy_id: 00062AE0BC129D29
+            data_security_mode: LEGACY_SINGLE_USER_STANDARD
+            runtime_engine: STANDARD
+            num_workers: 10
