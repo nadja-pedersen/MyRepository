@@ -23,7 +23,7 @@ resources:
       tasks:
         - task_key: PB_KT
           notebook_task:
-            notebook_path: ../src/testjob.py
+            notebook_path: ../src/testjob.ipynb
             source: WORKSPACE
           job_cluster_key: nile_tagging_cluster
           timeout_seconds: 7200

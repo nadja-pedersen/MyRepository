@@ -17,25 +17,25 @@ jobs:
   # Used by the "pipeline_update" job to deploy the bundle.
   # Bundle validation is automatically performed as part of this deployment.
   # If validation fails, this workflow fails.
-  validate:
-    name: "validate bundle"
-    runs-on: ubuntu-latest
+  # validate:
+  #   name: "validate bundle"
+  #   runs-on: ubuntu-latest
 
-    steps:
-      # Check out this repo, so that this workflow can access it.
-      - uses: actions/checkout@v3
+  #   steps:
+  #     # Check out this repo, so that this workflow can access it.
+  #     - uses: actions/checkout@v3
 
-      # Download the Databricks CLI.
-      # See https://github.com/databricks/setup-cli
-      - uses: databricks/setup-cli@main
+  #     # Download the Databricks CLI.
+  #     # See https://github.com/databricks/setup-cli
+  #     - uses: databricks/setup-cli@main
 
-      # Deploy the bundle to the "qa" target as defined
-      # in the bundle's settings file.
-      - run: databricks bundle validate
-        working-directory: .
-        env:
-          DATABRICKS_TOKEN: ${{ secrets.NADJA_PAT_TOKEN}}
-          DATABRICKS_BUNDLE_ENV: development
+  #     # Deploy the bundle to the "qa" target as defined
+  #     # in the bundle's settings file.
+  #     - run: databricks bundle validate
+  #       working-directory: .
+  #       env:
+  #         DATABRICKS_TOKEN: ${{ secrets.NADJA_PAT_TOKEN}}
+  #         DATABRICKS_BUNDLE_ENV: development
   deploy:
     name: "Deploy bundle"
     runs-on: ubuntu-latest
